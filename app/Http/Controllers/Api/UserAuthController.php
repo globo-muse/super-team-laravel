@@ -29,7 +29,7 @@ class UserAuthController extends Controller
             'id' => $client->id,
             'name' => $client->name,
             'email' => $client->email,
-            'image' => $client->image ?? 'https://loremflickr.com/300/300',
+            'image' => $client->image,
         ], 200);
     }
 
