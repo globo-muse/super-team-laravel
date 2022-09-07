@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\CollaboratorControllers;
+use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,13 +18,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::post('/auth', 'App\Http\Controllers\Api\UserAuth@auth');
+Route::post('/auth', [UserAuthController::class, 'auth']);
+
+Route::get('/collaborators', [CollaboratorControllers::class, 'index'])->name('api.collaborators.list');
 
 Route::middleware(['auth:sanctum'])->group(function() {
-    Route::get('/me', 'App\Http\Controllers\Api\UserAuth@me')->name('api.auth.me');
-    Route::get('/orders', 'App\Http\Controllers\Api\OrderApiController@index')->name('api.orders.list');
-    Route::post('/orders', 'App\Http\Controllers\Api\OrderApiController@store');
-    Route::get('/orders/{id}/vimeo-slot', 'App\Http\Controllers\Api\OrderApiController@createSlot');
+    Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
+    Route::get('/orders', [OrderApiController::class, 'index'])->name('api.orders.list');
+    Route::post('/orders', [OrderApiController::class, 'store']);
+    Route::get('/orders/{id}/vimeo-slot', [OrderApiController::class, 'createSlot']);
 });
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
