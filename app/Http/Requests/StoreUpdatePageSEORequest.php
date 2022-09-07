@@ -29,6 +29,7 @@ class StoreUpdatePageSEORequest extends FormRequest
             // 'slug' => "required|unique:pages,slug,{$slug},slug",
             'title' => 'required|min:3|max:255|unique:pages,slug,{$slug},slug',
             'meta_title' => 'min:3|max:255',
+            'path' => 'required|max:255',
             'image' => ['nullable', 'image'],
             'description' => 'min:3',
         ];

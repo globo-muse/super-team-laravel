@@ -10,6 +10,11 @@
     <input type="text" name="meta_title" class="form-control" placeholder="Nome:" value="{{ $page->meta_title ?? old('meta_title') }}">
 </div>
 
+<div class="form-group">
+    <label>Path:</label>
+    <input type="text" name="path" class="form-control" placeholder="Nome:" value="{{ $page->path ?? old('path') }}">
+</div>
+
 <x-adminlte-input-file name="image" placeholder="Imagem para SEO...">
     <x-slot name="prependSlot">
         <div class="input-group-text bg-lightblue">

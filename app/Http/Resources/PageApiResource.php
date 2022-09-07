@@ -17,6 +17,7 @@ class PageApiResource extends JsonResource
         return [
             'slug' => $this->slug,
             'title' => $this->title,
+            'path' => $this->path,
             'image' => asset($this->image),
             'description' => $this->description,
         ];
