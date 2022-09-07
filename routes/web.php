@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\HomeController As AdminHomeController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +23,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/admin', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('admin.home');
-Route::resource('/admin/users', UserController::class);
+Route::prefix('admin')
+->middleware('auth')
+->group(function() {
+    Route::get('/', [AdminHomeController::class, 'index'])->name('admin.home');
+    Route::resource('/users', UserController::class);
+});

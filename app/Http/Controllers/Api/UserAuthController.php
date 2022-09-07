@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserAuth extends Controller
+class UserAuthController extends Controller
 {
     public function auth(Request $request)
     {
@@ -24,7 +24,13 @@ class UserAuth extends Controller
         }
 
         $token = $client->createToken($request->device_name)->plainTextToken;
-        return response()->json(['token' => $token], 200);
+        return response()->json([
+            'token' => $token,
+            'id' => $client->id,
+            'name' => $client->name,
+            'email' => $client->email,
+            'image' => $client->image,
+        ], 200);
     }
 
 
