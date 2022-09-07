@@ -14,15 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('/orders', 'App\Http\Controllers\Api\OrderApiController@index');
-Route::post('/orders', 'App\Http\Controllers\Api\OrderApiController@store');
-Route::get('/orders/me', 'App\Http\Controllers\Api\OrderApiController@getByRespondeId');
-Route::get('/orders/aa', 'App\Http\Controllers\Api\OrderApiController@createSlot');
 
 Route::post('/auth', 'App\Http\Controllers\Api\UserAuth@auth');
-Route::get('/me', 'App\Http\Controllers\Api\UserAuth@me')->middleware(['auth:sanctum']);
+
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/me', 'App\Http\Controllers\Api\UserAuth@me')->name('api.auth.me');
+    Route::get('/orders', 'App\Http\Controllers\Api\OrderApiController@index')->name('api.orders.list');
+    Route::post('/orders', 'App\Http\Controllers\Api\OrderApiController@store');
+    Route::get('/orders/{id}/vimeo-slot', 'App\Http\Controllers\Api\OrderApiController@createSlot');
+});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+// Route::get('/orders/me', 'App\Http\Controllers\Api\OrderApiController@getByRespondeId');
+
 
