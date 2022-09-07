@@ -324,6 +324,11 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],
+        [
+            'text'        => 'Paginas',
+            'url'         => 'admin/pages-seo',
+            'icon'        => 'far fa-user',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
