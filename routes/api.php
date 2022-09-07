@@ -21,3 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/orders', 'App\Http\Controllers\Api\OrderApiController@index');
 Route::post('/orders', 'App\Http\Controllers\Api\OrderApiController@store');
 Route::get('/orders/me', 'App\Http\Controllers\Api\OrderApiController@getByRespondeId');
+Route::get('/orders/aa', 'App\Http\Controllers\Api\OrderApiController@createSlot');
+
+Route::post('/auth', 'App\Http\Controllers\Api\UserAuth@auth');
+Route::get('/me', 'App\Http\Controllers\Api\UserAuth@me')->middleware(['auth:sanctum']);
+

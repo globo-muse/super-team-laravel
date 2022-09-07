@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Services\OrderService;
+use App\Services\Vimeo\VimeoSlotService;
+use Illuminate\Http\Request;
+use Vimeo\Exceptions\VimeoUploadException;
 
 class OrderApiController extends Controller
 {
@@ -31,5 +34,17 @@ class OrderApiController extends Controller
     {
         $id = 10;
         return $this->orderService->getOrderByResponderId($id);
+    }
+
+    public function createSlot(Request $request)
+    {
+        // $vs = app()->make('App\Services\VimeoSlotService');
+        $a = 'asdad';
+        $vs = new VimeoSlotService();
+        try {
+            return $vs->createSlot(100, 92834274, 'SEI LA');
+        } catch (VimeoUploadException $e) {
+            return $e->getMessage();
+        }
     }
 }
