@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CollaboratorControllers;
 use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\PageApiController;
 use App\Http\Controllers\Api\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth', [UserAuthController::class, 'auth']);
 
 Route::get('/collaborators', [CollaboratorControllers::class, 'index'])->name('api.collaborators.list');
+Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list');
+Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
