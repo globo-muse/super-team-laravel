@@ -19,7 +19,7 @@ class UserApiResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            'department' => $this->department->name
+            'department' => $this->department->name ?? null,
         ];
     }
 }
