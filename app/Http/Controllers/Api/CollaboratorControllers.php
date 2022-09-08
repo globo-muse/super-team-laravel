@@ -17,4 +17,12 @@ class CollaboratorControllers extends Controller
         $users = $this->repository->with('department')->get();
         return UserApiResource::collection($users);
     }
+
+    public function show($id)
+    {
+        if(!$user = $this->repository->find($id)) {
+            return response()->json(['message' => 'not founded'], 404);
+        }
+        return new UserApiResource($user);
+    }
 }
