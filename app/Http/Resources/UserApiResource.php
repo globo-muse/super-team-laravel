@@ -14,12 +14,13 @@ class UserApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        $image = !empty($this->image) ? url('storage/' . $this->image) : null;
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
-            'image' => url('storage/'.$this->image),
+            'image' => $image,
             'department' => new DepartmentApiResource($this->department) ?? null,
         ];
     }
