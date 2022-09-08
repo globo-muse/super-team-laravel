@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth', [UserAuthController::class, 'auth']);
 
 Route::get('/collaborators', [CollaboratorControllers::class, 'index'])->name('api.collaborators.list');
+Route::get('/collaborators/{id}', [CollaboratorControllers::class, 'show'])->name('api.collaborators.show');
 Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list');
 Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
 
