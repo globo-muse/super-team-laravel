@@ -325,6 +325,11 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text'        => 'Departamentos',
+            'url'         => 'admin/departments',
+            'icon'        => 'far fa-user',
+        ],
+        [
             'text'        => 'Paginas',
             'url'         => 'admin/pages-seo',
             'icon'        => 'far fa-user',

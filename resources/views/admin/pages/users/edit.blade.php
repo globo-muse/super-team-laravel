@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', "Editar o Usuários {{ $user->name }}")
+@section('title', "Editar o Usuário {$user->name}")
 
 @section('content_header')
     <h1>Editar o Usuários {{ $user->name }}</h1>
@@ -8,7 +8,7 @@
 
 @section('content')
     
-    <form action="{{ route('users.update', $user->id) }}" method="post" class="form">
+    <form action="{{ route('users.update', $user->id) }}" method="post" class="form" enctype="multipart/form-data">
         @method('PUT')
         @csrf
         @include('admin.pages.users.forms.default')

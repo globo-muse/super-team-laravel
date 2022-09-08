@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('pages-seo.update', $page->id) }}" class="form" method="POST">
+            <form action="{{ route('pages-seo.update', $page->id) }}" class="form" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

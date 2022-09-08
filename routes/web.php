@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\HomeController As AdminHomeController;
-use App\Http\Controllers\Admin\PageSEOController;
+use App\Http\Controllers\Admin\{
+    DepartmentController,
+    PageSEOController,
+    UserController,
+    HomeController As AdminHomeController
+};
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -32,4 +35,5 @@ Route::prefix('admin')
     Route::get('/', [AdminHomeController::class, 'index'])->name('admin.index');
     Route::resource('/users', UserController::class);
     Route::resource('/pages-seo', PageSEOController::class);
+    Route::resource('/departments', DepartmentController::class)->except('show');
 });
