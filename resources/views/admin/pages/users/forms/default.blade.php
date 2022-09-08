@@ -4,6 +4,10 @@
 
 <x-adminlte-input name="role" type="text" placeholder="Cargo" value="{{ $user->role ?? old('role') }}" />
 
+<x-adminlte-select name="department_id">
+    <x-adminlte-options :options="$departments" :selected="$user->department_id ?? old('department_id')" empty-option="Selecione um Departamento..."/>
+</x-adminlte-select>
+
 <x-adminlte-input-file name="image" placeholder="Foto de usuário...">
     <x-slot name="prependSlot">
         <div class="input-group-text bg-lightblue">

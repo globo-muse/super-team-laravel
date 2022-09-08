@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
 
-    protected User $repository;
-    
-    public function __construct(User $user)
-    {
-        $this->repository = $user;
-    }
+    public function __construct(
+        private User $repository,
+        private Department $department
+    )
+    {}
 
 
     /**
@@ -37,7 +38,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.pages.users.create');
+        $departments = $this->departmentsToOption($this->department->all());
+        return view('admin.pages.users.create', ['departments' => $departments]);
     }
 
     /**
@@ -53,6 +55,11 @@ class UserController extends Controller
         if(!$this->repository->create($data)) {
             return redirect()->back()->with('error', 'Erro no cadastro, tente novamente');
         }
+
+        if ($request->hasFile('image') && $request->image->isValid()) {
+            $data['image'] = $request->image->store("users");
+        }
+
         return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
     }
 
@@ -78,7 +85,8 @@ class UserController extends Controller
         if(!$user = $this->repository->find($id)) {
             return redirect()->back()->with('Usuário não encontrado');
         }
-        return view('admin.pages.users.edit', ['user' => $user]);
+        $departments = $this->departmentsToOption($this->department->all());
+        return view('admin.pages.users.edit', ['user' => $user, 'departments' => $departments ]);
     }
 
     /**
@@ -98,6 +106,15 @@ class UserController extends Controller
             unset($data['password']);
         }
 
+        if ($request->hasFile('image') && $request->image->isValid()) {
+
+            if (!empty($user->image) && Storage::exists($user->image)) {
+                Storage::delete($user->image);
+            }
+
+            $data['image'] = $request->image->store("users");
+        }
+
         $user->update($data);
         return redirect()->route('users.index')->with('message', 'Usuário editado com sucesso');
     }
@@ -115,5 +132,14 @@ class UserController extends Controller
         }
         $user->delete();
         return redirect()->route('users.index')->with('message', 'Usuário removido com sucesso');
+    }
+
+    private function departmentsToOption($departments)
+    {
+        $departmentsArray = [];
+        foreach($departments as $department) {
+            $departmentsArray[$department->id] = $department->name;
+        }
+        return $departmentsArray;
     }
 }

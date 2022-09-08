@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
-class StoreUpdatePageSEORequest extends FormRequest
+class StoreUpdateDepartment extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +23,8 @@ class StoreUpdatePageSEORequest extends FormRequest
      */
     public function rules()
     {
-        $slug = Str::slug($this->title);
         return [
-            // 'slug' => "required|unique:pages,slug,{$slug},slug",
-            'title' => 'required|min:3|max:255|unique:pages,slug,{$slug},slug',
-            'meta_title' => 'min:3|max:255',
-            'path' => 'required|max:255',
-            'image' => ['nullable', 'image'],
-            'description' => 'min:3',
+            'name' => 'required|min:2|max:255',
         ];
     }
 }
