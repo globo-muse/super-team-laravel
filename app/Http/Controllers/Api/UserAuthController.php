@@ -24,13 +24,7 @@ class UserAuthController extends Controller
         }
 
         $token = $client->createToken($request->device_name)->plainTextToken;
-        return response()->json([
-            'token' => $token,
-            'id' => $client->id,
-            'name' => $client->name,
-            'email' => $client->email,
-            'image' => $client->image,
-        ], 200);
+        return response()->json(new UserApiResource($client), 200);
     }
 
 

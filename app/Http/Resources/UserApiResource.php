@@ -19,6 +19,7 @@ class UserApiResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
+            'image' => url('storage/'.$this->image),
             'department' => new DepartmentApiResource($this->department) ?? null,
         ];
     }
