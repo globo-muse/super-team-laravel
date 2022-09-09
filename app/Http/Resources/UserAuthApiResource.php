@@ -16,7 +16,6 @@ class UserAuthApiResource extends ResourcesUserApiResource
     {
         $toArray = parent::toArray($request);
         $toArray['token'] = $this->token;
-        // dd($toArray);
         return $toArray;
     }
 }

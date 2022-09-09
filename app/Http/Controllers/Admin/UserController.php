@@ -51,13 +51,14 @@ class UserController extends Controller
     public function store(StoreUpdateUserRequest $request)
     {
         $data = $request->all();
+        
+        if ($request->hasFile('image') && $request->image->isValid()) {
+            $data['image'] = $request->image->store("users");
+        }
+        
         $data['password'] = bcrypt($data['password']);
         if(!$this->repository->create($data)) {
             return redirect()->back()->with('error', 'Erro no cadastro, tente novamente');
-        }
-
-        if ($request->hasFile('image') && $request->image->isValid()) {
-            $data['image'] = $request->image->store("users");
         }
 
         return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
