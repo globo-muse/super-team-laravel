@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserApiResource;
+use App\Http\Resources\UserAuthApiResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,8 @@ class UserAuthController extends Controller
         }
 
         $token = $client->createToken($request->device_name)->plainTextToken;
-        return response()->json(new UserApiResource($client), 200);
+        $client->token = $token;
+        return response()->json(new UserAuthApiResource($client), 200);
     }
 
 
