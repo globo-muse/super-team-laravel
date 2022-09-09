@@ -27,6 +27,7 @@ Route::get('/collaborators/{id}', [CollaboratorControllers::class, 'show'])->nam
 Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list');
 Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
 Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api.departments.index');
+Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers'])->name('api.departments.users');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
