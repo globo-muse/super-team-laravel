@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CollaboratorControllers;
+use App\Http\Controllers\Api\DepartmentApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\PageApiController;
 use App\Http\Controllers\Api\UserAuthController;
@@ -25,6 +26,7 @@ Route::get('/collaborators', [CollaboratorControllers::class, 'index'])->name('a
 Route::get('/collaborators/{id}', [CollaboratorControllers::class, 'show'])->name('api.collaborators.show');
 Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list');
 Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
+Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api.departments.index');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
