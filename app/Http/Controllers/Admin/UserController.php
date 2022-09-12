@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
 use App\Models\Department;
 use App\Models\User;
+use App\Services\Email\Sendgrid\SendgridService;
+use App\Services\Email\Sendgrid\TemplateData\UserCreatedTemplateData;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -59,7 +61,16 @@ class UserController extends Controller
         
         $data['password'] = bcrypt($data['password']);
         try {
-            $data = $this->repository->create($data);
+            $user = $this->repository->create($data);
+
+            //TODO: remove hard code
+            SendgridService::send(
+                'd-ab16489b51f84b6a861ca5b15e3b089b',
+                $user->email,
+                $user->name,
+                UserCreatedTemplateData::transform($user, $request->password),
+            );
+            
             return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
         } catch (QueryException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -107,6 +118,8 @@ class UserController extends Controller
         $data = $request->all();
         if(empty($data['password'])) {
             unset($data['password']);
+        } else {
+            $data['password'] = bcrypt($data['password']);
         }
 
         if ($request->hasFile('image') && $request->image->isValid()) {

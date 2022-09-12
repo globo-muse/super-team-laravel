@@ -12,11 +12,7 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('occasion', 100)->nullable()->after('id');
-        });
-    }
+    {}
 
     /**
      * Reverse the migrations.
@@ -24,9 +20,5 @@ return new class extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('occasion');
-        });
-    }
+    {}
 };

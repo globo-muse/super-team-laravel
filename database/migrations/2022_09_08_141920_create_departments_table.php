@@ -20,9 +20,7 @@ return new class extends Migration
         });
 
         Schema::table('users', function(Blueprint $table) {
-            // $table->after('role', function(Blueprint $table) {
-                $table->unsignedBigInteger('department_id')->nullable();
-            // });
+            $table->unsignedBigInteger('department_id')->nullable();
             $table->foreign('department_id', 'users_department_id_foreign')
                 ->references('id')
                 ->on('departments');
