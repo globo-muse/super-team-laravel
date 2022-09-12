@@ -25,9 +25,9 @@ class StoreUpdateUserRequest extends FormRequest
     {
         $validationRules = [
             'name' => 'required|min:3|max:255',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'department_id' => 'required|exists:departments,id',
-            'role' => 'required|min:3|max:255',
+            'role' => 'nullable|min:2|max:255',
             'image' => ['nullable', 'image'],
             'password' => 'required|min:6|max:15',
         ];

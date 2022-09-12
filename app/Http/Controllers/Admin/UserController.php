@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
 use App\Models\Department;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -57,11 +58,12 @@ class UserController extends Controller
         }
         
         $data['password'] = bcrypt($data['password']);
-        if(!$this->repository->create($data)) {
-            return redirect()->back()->with('error', 'Erro no cadastro, tente novamente');
+        try {
+            $data = $this->repository->create($data);
+            return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
+        } catch (QueryException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
-        return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
     }
 
     /**

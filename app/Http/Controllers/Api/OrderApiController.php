@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\Email\Sendgrid\SendgridService;
+use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
 use App\Services\OrderService;
 use App\Services\Vimeo\VimeoSlotService;
 use Illuminate\Http\Request;
@@ -23,15 +26,23 @@ class OrderApiController extends Controller
         return $this->orderService->getAllOrders();
     }
 
-
     public function store(StoreOrderRequest $request)
     {
         $data = $request->all();
         $data['responder_id'] = $data['product_id'];
-        return $this->orderService->createOrder($data);
+        $order = $this->orderService->createOrder($data);
+        if(!$order) {
+            return response(['message' => 'error to create an order'], 400);
+        }
+        
+        SendgridService::send(
+            'd-3ba931ea440e4c4b82c5c7a8ead37554',
+            $order->email,
+            $order->name,
+            OrderTemplateData::transform($order),
+        );
+        return response(new OrderResource($order), 201);
     }
-
-
 
     public function getByRespondeId(StoreOrderRequest $request)
     {

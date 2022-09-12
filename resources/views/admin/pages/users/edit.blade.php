@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    
+    @include('admin.includes.alerts')
     <form action="{{ route('users.update', $user->id) }}" method="post" class="form" enctype="multipart/form-data">
         @method('PUT')
         @csrf
