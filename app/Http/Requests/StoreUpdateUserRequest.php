@@ -23,9 +23,10 @@ class StoreUpdateUserRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->segment(3);
         $validationRules = [
             'name' => 'required|min:3|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => ['required', 'string', 'email', 'min:3', 'max:255', "unique:users,email,{$id},id"],
             'department_id' => 'required|exists:departments,id',
             'role' => 'nullable|min:2|max:255',
             'image' => ['nullable', 'image'],
