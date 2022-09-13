@@ -34,6 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/orders', [OrderApiController::class, 'index'])->name('api.orders.list');
     Route::post('/orders', [OrderApiController::class, 'store']);
     Route::get('/orders/{id}/vimeo-slot', [OrderApiController::class, 'createSlot']);
+    Route::put('/orders/{id}/deny', [OrderApiController::class, 'denyOrder']);
 });
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

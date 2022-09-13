@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\{StoreOrderRequest};
 use App\Http\Resources\OrderResource;
-use App\Jobs\OrderCreatedResponderJob;
+use App\Jobs\{OrderCreatedResponderJob, OrderDeniedJob};
 use App\Models\Order;
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
@@ -74,5 +74,28 @@ class OrderApiController extends Controller
         } catch (VimeoUploadException $e) {
             return $e->getMessage();
         }
+    }
+
+
+    public function denyOrder(Request $request, $id)
+    {
+        $order = $this->orderService->getOrderById($id);
+        // dd($order->responder);
+        $user = $request->user();
+
+        if(!$order) {
+            return response(['message' => 'order not founded'], 404);
+        }
+
+        if($order->responder_id !== $user->id) {
+            return response(['message' => 'order dont belongs to you'], 403);
+        }
+
+        $order->status = 'denied';
+        $order->save();
+        
+        OrderDeniedJob::dispatch($order);
+
+        return response(['message' => 'status changed with success'], 200);
     }
 }
