@@ -49,11 +49,10 @@
         </table>
     </div>
     <div class="card-footer">
-         :D
         @if (!empty($filters))
-            {{-- {!! $users->appends($filters)->links() !!} --}}
+            {!! $users->appends($filters)->links() !!}
         @else
-            {{-- {!! $users->links() !!} --}}
+            {!! $users->links() !!}
         @endif
     </div>
 </div>

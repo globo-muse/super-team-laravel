@@ -14,7 +14,7 @@ class DepartmentController extends Controller
 
     public function index()
     {
-        $items = $this->repository->all();
+        $items = $this->repository->paginate();
         return view('admin.pages.departments.index', ['items' => $items]);
     }
 
