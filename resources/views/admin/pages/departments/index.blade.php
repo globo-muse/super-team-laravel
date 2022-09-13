@@ -44,6 +44,11 @@
             </table>
         </div>
         <div class="card-footer">
+            @if (!empty($filters))
+                {!! $items->appends($filters)->links() !!}
+            @else
+                {!! $items->links() !!}
+            @endif
         </div>
     </div>
 @stop
