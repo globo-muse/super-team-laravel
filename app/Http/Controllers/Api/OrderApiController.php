@@ -29,12 +29,16 @@ class OrderApiController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $data = $request->all();
+        
         $data['responder_id'] = $data['product_id'];
+        $data['user_id'] = $request->user()->id;
+
         $order = $this->orderService->createOrder($data);
         if(!$order) {
             return response(['message' => 'error to create an order'], 400);
         }
         
+        //TODO: remove hardcode
         SendgridService::send(
             'd-3ba931ea440e4c4b82c5c7a8ead37554',
             $order->email,
