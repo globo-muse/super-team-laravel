@@ -8,7 +8,16 @@ use \SendGrid\Mail\Mail as SengridMail;
 
 class SendgridService
 {
-    static public function send($templateId, $toEmail, $toName, $dinamicTemplateData)
+
+    /**
+     * Send e email by Sendgrid through TemplateDynamic
+     * 
+     * @param string $templateId
+     * @param string $toEmail
+     * @param string $toName
+     * @param array $dinamicTemplateData = []
+     */
+    static public function send($templateId, $toEmail, $toName, $dinamicTemplateData = [])
     {
         $email = new SengridMail();
         $email->setFrom(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
