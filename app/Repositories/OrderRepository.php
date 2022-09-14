@@ -29,4 +29,9 @@ class OrderRepository implements OrderRepositoryInterface
     {
         return $this->entity->where('responder_id', $id)->get();
     }
+
+    public function getOrderById($orderId)
+    {
+        return $this->entity->find($orderId);
+    }
 }

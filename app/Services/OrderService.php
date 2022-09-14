@@ -27,4 +27,9 @@ class OrderService
     {
         return $this->repository->getOrdersByResponserId($id);
     }
+
+    public function getOrderById($id)
+    {
+        return $this->repository->getOrderById($id);
+    }
 }

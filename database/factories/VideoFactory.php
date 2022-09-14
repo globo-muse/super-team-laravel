@@ -1,0 +1,29 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Video>
+ */
+class VideoFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition()
+    {
+        return [
+            'order_id' => '',
+            'is_public' => '',
+            'vimeo_id' => '/videos/' . fake()->ran,
+            'hash' => '',
+            'thumb' => '',
+            'link_play' => '',
+            'status' => '',
+        ];
+    }
+}

@@ -10,10 +10,12 @@ class OrderTemplateData
     {
         return [
             "customer_name" => $order->name,
+            "responder_name" => $order->responder->name,
             "order_id" => $order->id,
             "to_name" => $order->name,
             "occasion" => $order->occasion,
             "instructions" => $order->instructions,
+            "frontend_url" => getenv('FRONTEND_APP_URL'),
         ];
     }
 }
