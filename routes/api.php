@@ -31,7 +31,8 @@ Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
-    Route::get('/orders', [OrderApiController::class, 'index'])->name('api.orders.list');
+    Route::get('/orders/to-answer', [OrderApiController::class, 'index'])->name('api.orders.order.to.answer');
+    Route::get('/orders/', [OrderApiController::class, 'getByUserId'])->name('api.orders.my.orders');
     Route::post('/orders', [OrderApiController::class, 'store']);
     Route::get('/orders/{id}/vimeo-slot', [OrderApiController::class, 'createSlot']);
     Route::put('/orders/{id}/deny', [OrderApiController::class, 'denyOrder']);

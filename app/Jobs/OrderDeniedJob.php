@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
 use Illuminate\Queue\SerializesModels;
 
 class OrderDeniedJob implements ShouldQueue
@@ -31,6 +32,26 @@ class OrderDeniedJob implements ShouldQueue
      * @var \App\Models\User
      */
     private User $responder;
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return [new ThrottlesExceptions(10, 5)];
+    }
+
+    /**
+    * Determine the time at which the job should timeout.
+    *
+    * @return \DateTime
+    */
+    public function retryUntil()
+    {
+        return now()->addMinutes(5);
+    }
 
     /**
      * Create a new job instance.

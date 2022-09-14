@@ -23,11 +23,31 @@ class OrderApiController extends Controller
         private Order $order,
     ) {}
 
-    public function index()
+    /**
+     * 
+     */
+    public function index(Request $request)
     {
-        return $this->orderService->getAllOrders();
+        $user = $request->user();
+        $perPage = (int) $request->per_page ?? 10;
+        $orders = $this->order->where('responder_id', $user->id)->paginate($perPage);
+        return OrderResource::collection($orders);
     }
 
+    /**
+     * 
+     */
+    public function getByUserId(Request $request)
+    {
+        $user = $request->user();
+        $perPage = (int) $request->per_page ?? 10;
+        $orders = $this->order->where('user_id', $user->id)->paginate($perPage);
+        return OrderResource::collection($orders);
+    }
+
+    /**
+     * 
+     */
     public function store(StoreOrderRequest $request)
     {
         $data = $request->all();
@@ -55,12 +75,18 @@ class OrderApiController extends Controller
         }
     }
 
+    /**
+     * 
+     */
     public function getByRespondeId(StoreOrderRequest $request)
     {
         $user = $request->user();
         return $this->orderService->getOrderByResponderId($user->id);
     }
 
+    /**
+     * 
+     */
     public function createSlot($id, Request $request)
     {
         $order = $this->order->where('id', $id)->first();
@@ -76,7 +102,9 @@ class OrderApiController extends Controller
         }
     }
 
-
+    /**
+     * 
+     */
     public function denyOrder(Request $request, $id)
     {
         $order = $this->orderService->getOrderById($id);

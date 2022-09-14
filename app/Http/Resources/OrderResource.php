@@ -16,6 +16,8 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => new UserApiResource($this->user),
+            'responder' => new UserApiResource($this->responder),
             'name' => $this->name,
             'email' => $this->email,
             'occasion' => $this->occasion,

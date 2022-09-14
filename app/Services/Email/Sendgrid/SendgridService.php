@@ -26,11 +26,7 @@ class SendgridService
         $email->setTemplateId($templateId);
         $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
 
-        try {
-            $response = $sendgrid->send($email);
-            return $response;
-        } catch (Exception $e) {
-            echo 'Caught exception: '. $e->getMessage() ."\n";
-        }
+        $response = $sendgrid->send($email);
+        return $response;
     }
 }
