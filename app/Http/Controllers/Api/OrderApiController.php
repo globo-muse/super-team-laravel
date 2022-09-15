@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\{StoreOrderRequest};
+use App\Http\Requests\{StoreOrderRequest, StoreUpdateVimeoSlotRequest};
 use App\Http\Resources\OrderResource;
 use App\Jobs\{OrderCreatedResponderJob, OrderDeniedJob};
-use App\Models\Order;
+use App\Models\{Order, Video};
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
 use App\Services\OrderService;
-use App\Services\Vimeo\VimeoSlotService;
+use App\Services\Vimeo\{VimeoResponse, VimeoSlotService};
 use Exception;
 use Illuminate\Http\Request;
 use Vimeo\Exceptions\VimeoUploadException;
@@ -21,6 +21,7 @@ class OrderApiController extends Controller
     public function __construct(
         private OrderService $orderService,
         private Order $order,
+        private Video $video,
     ) {}
 
     /**
@@ -43,6 +44,15 @@ class OrderApiController extends Controller
         $perPage = (int) $request->per_page ?? 10;
         $orders = $this->order->where('user_id', $user->id)->paginate($perPage);
         return OrderResource::collection($orders);
+    }
+
+    public function show($id)
+    {
+        if(!$order = $this->orderService->getOrderById($id)) {
+            return response(['message' => 'order not founded'], 404);
+        }
+
+        return response()->json(new OrderResource($order));
     }
 
     /**
@@ -87,43 +97,58 @@ class OrderApiController extends Controller
     /**
      * 
      */
-    public function createSlot($id, Request $request)
+    public function createSlot(StoreUpdateVimeoSlotRequest $request, $id)
     {
-        $order = $this->order->where('id', $id)->first();
-        if(!$order) {
-            return response()->json(['message' => 'order not founded'], 404);
-        }
+
+        $order = $this->orderService->getOrderById($id);
         $fileSize = $request['file_size'];
         $vs = new VimeoSlotService();
         try {
-            return $vs->createSlot($order->id, $fileSize, $order->name);
+
+            $responseRaw = $vs->createSlot($order->id, $fileSize, $order->name);
+            $vimeoResponse = new VimeoResponse($responseRaw);
+            $dataVideo = $vimeoResponse->convertIntoVimeoModel($order);
+            $this->video->updateOrCreate(['order_id' => $order->id], $dataVideo);
+            return response($responseRaw, 201);
         } catch (VimeoUploadException $e) {
-            return $e->getMessage();
+            return response($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * 
      */
-    public function denyOrder(Request $request, $id)
+    public function denyOrder(StoreUpdateVimeoSlotRequest $request, $id)
     {
         $order = $this->orderService->getOrderById($id);
-        // dd($order->responder);
-        $user = $request->user();
-
-        if(!$order) {
-            return response(['message' => 'order not founded'], 404);
-        }
-
-        if($order->responder_id !== $user->id) {
-            return response(['message' => 'order dont belongs to you'], 403);
-        }
-
         $order->status = 'denied';
         $order->save();
         
         OrderDeniedJob::dispatch($order);
 
         return response(['message' => 'status changed with success'], 200);
+    }
+
+    /**
+     * 
+     */
+    public function videoFileSended(StoreUpdateVimeoSlotRequest $request, $id)
+    {
+        $order = $this->orderService->getOrderById($id);
+        $user = $request->user();
+
+        $video = $order->video;
+        if(!$video) {
+            return response(['message' => 'vimeo informations not founded'], 404);
+        }
+
+        $order->status = 'sended';
+        $order->save();
+        $video->status = 'sended';
+        $video->save();
+
+        
+
+        return response(['message' => 'video sended'], 200);
     }
 }
