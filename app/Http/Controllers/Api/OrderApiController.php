@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{StoreOrderRequest, StoreUpdateVimeoSlotRequest};
 use App\Http\Resources\OrderResource;
-use App\Jobs\{OrderCreatedResponderJob, OrderDeniedJob};
+use App\Jobs\{OrderCreatedResponderJob, OrderDeniedJob, VimeoProcessingStatusJob};
 use App\Models\{Order, Video};
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
@@ -134,8 +134,8 @@ class OrderApiController extends Controller
      */
     public function videoFileSended(StoreUpdateVimeoSlotRequest $request, $id)
     {
-        $order = $this->orderService->getOrderById($id);
-        $user = $request->user();
+        $order = $request->order;//$this->orderService->getOrderById($id);
+        // $user = $request->user();
 
         $video = $order->video;
         if(!$video) {
@@ -147,7 +147,7 @@ class OrderApiController extends Controller
         $video->status = 'sended';
         $video->save();
 
-        
+        VimeoProcessingStatusJob::dispatch($order);
 
         return response(['message' => 'video sended'], 200);
     }

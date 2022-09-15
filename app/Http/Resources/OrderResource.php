@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -16,13 +17,15 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => new UserApiResource($this->user),
+            'user' => new UserApiResource($this->user),
+            'user_id' => $this->user_id,
             'responder' => new UserApiResource($this->responder),
+            'responder_id' => $this->responder_id,
             'name' => $this->name,
             'email' => $this->email,
             'occasion' => $this->occasion,
             'instructions' => $this->instructions,
-            'date' => $this->created_at
+            'date' => $this->created_at,
         ];
     }
 }

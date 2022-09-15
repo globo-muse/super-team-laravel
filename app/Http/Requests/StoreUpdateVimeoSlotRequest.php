@@ -7,6 +7,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUpdateVimeoSlotRequest extends FormRequest
 {
+
+    /**
+     * Instanco of a Order to dont need get in DB againt
+     * 
+     * @var App\Model\Order
+     */
+    public Order $order;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,7 +32,7 @@ class StoreUpdateVimeoSlotRequest extends FormRequest
         if($order->responder_id !== $user->id) {
             return false;
         }
-
+        $this->order = $order;
         return true;
     }
 

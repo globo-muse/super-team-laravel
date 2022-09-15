@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,14 +17,16 @@ class VideoFactory extends Factory
      */
     public function definition()
     {
+        $order = Order::factory()->create();
+        $vimeoHash = rand(1000000, 9999999);
         return [
-            'order_id' => '',
-            'is_public' => '',
-            'vimeo_id' => '/videos/' . fake()->ran,
-            'hash' => '',
+            'order_id' => $order->id,
+            'is_public' => true,
+            'vimeo_id' => '/videos/' . $vimeoHash,
+            'hash' => $vimeoHash,
             'thumb' => '',
             'link_play' => '',
-            'status' => '',
+            'status' => 'open',
         ];
     }
 }
