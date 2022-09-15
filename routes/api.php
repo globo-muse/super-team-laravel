@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\DepartmentApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\PageApiController;
 use App\Http\Controllers\Api\UserAuthController;
+use App\Http\Controllers\Api\VideosApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,7 @@ Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list'
 Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
 Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api.departments.index');
 Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers'])->name('api.departments.users');
+Route::get('/videos/logo-waiting', [VideosApiController::class, 'getAllVideosLogoable'])->name('api.videos.logoable.list');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
