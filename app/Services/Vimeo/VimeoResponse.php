@@ -2,6 +2,9 @@
 
 namespace App\Services\Vimeo;
 
+use App\Models\Order;
+use Exception;
+
 // use Polen\Includes\Vimeo\Polen_Vimeo_String_Url;
 
 /**
@@ -26,9 +29,20 @@ class VimeoResponse
      * Pega o ID do vimeo 
      * @return string '/videos/XXXX
      */
-    public function get_vimeo_id()
+    public function getVimeoId()
     {
         return $this->response['body']['uri'];
+    }
+    
+    /**
+     * Pega o ID do vimeo 
+     * @return string '/videos/XXXX
+     */
+    public function getHash()
+    {
+       $uri = $this->response['body']['uri'];
+       $hash = str_replace('/videos/', '', $uri);
+       return $hash;
     }
     
     /**
@@ -44,10 +58,10 @@ class VimeoResponse
      * Se o RESPONSE é um erro, na API não criar uma Exception
      * @return boolean
      */
-    public function is_error()
+    public function isError()
     {
         $return = false;
-        if( $this->get_general_error() != null && $this->get_general_error() != '' ) {
+        if( $this->getGeneralError() != null && $this->getGeneralError() != '' ) {
             $return = true;
         }
         return $return;
@@ -55,17 +69,17 @@ class VimeoResponse
     
     /**
      * Pega um erro generico, quando não um erro voltado ao DEV
-     * @return type
+     * @return string
      */
-    public function get_error()
+    public function getError()
     {
-        return !empty( $this->get_developer_message() )
-            ? $this->get_developer_message()
-            : $this->get_general_error();
+        return !empty( $this->getDeveloperMessage() )
+            ? $this->getDeveloperMessage()
+            : $this->getGeneralError();
     }
 
 
-    public function get_general_error()
+    public function getGeneralError()
     {
         if( isset( $this->response['body']['error'] ) ) {
             return $this->response['body']['error'];
@@ -78,7 +92,7 @@ class VimeoResponse
      * área uma msg especifica para o DEV
      * @return type
      */
-    public function get_developer_message()
+    public function getDeveloperMessage()
     {
         return isset( $this->response['body']['developer_message'] )
             ? $this->response['body']['developer_message']
@@ -89,7 +103,7 @@ class VimeoResponse
      * Pega o status do Vimeo da ultima resposta
      * @return string
      */
-    public function get_status()
+    public function getStatus()
     {
         return $this->response['body']['status'];
     }
@@ -128,7 +142,7 @@ class VimeoResponse
      * Pega a URL base para qualquer tamanho
      * @return string URL
      */
-    public function get_image_url_base()
+    public function getImageUrlBase()
     {
         return $this->response['body']['pictures']['base_link'];
     }
@@ -171,7 +185,7 @@ class VimeoResponse
      * Pega a duração do video
      * @return int
      */
-    public function get_duration()
+    public function getDuration()
     {
         return $this->response['body']['duration'];
     }
@@ -264,7 +278,7 @@ class VimeoResponse
     /**
      * Pega do link do arquivo para play
      */
-    public function get_play_link()
+    public function getPlayLink()
     {
         $files = $this->get_play_array();
         $result = array( 'height' => PHP_INT_MIN );
@@ -277,35 +291,63 @@ class VimeoResponse
     }
 
 
-    public function is_landscape():bool
+    public function isLandscape():bool
     {
         $is_landscape = true;
 
-        if($this->get_height() > $this->get_width()) {
+        if($this->getHeight() > $this->getWidth()) {
             $is_landscape = false;
         }
         return $is_landscape;
     }
 
     
-    public function is_portrait():bool
+    public function isPortrait():bool
     {
-        $is_portrait = true;
+        $isPortrait = true;
 
-        if($this->get_width() > $this->get_height()) {
-            $is_portrait = false;
+        if($this->getWidth() > $this->getHeight()) {
+            $isPortrait = false;
         }
-        return $is_portrait;
+        return $isPortrait;
     }
 
 
-    public function get_width()
+    public function getWidth()
     {
         return $this->response['body']['width'];
     }
 
-    public function get_height()
+    public function getHeight()
     {
         return $this->response['body']['height'];
+    }
+
+
+    public function convertIntoVimeoModel(Order $order)
+    {
+        if($this->isError()) {
+            throw new Exception($this->getError(), 500);
+        }
+        if($this->getStatus() !== self::STATUS_AVAILABLE) {
+            return [
+                'order_id' => $order->id,
+                'is_public' => true,
+                'vimeo_id' => $this->getVimeoId(),
+                'hash' => $this->getHash(),
+                'thumb' => null,
+                'link_play' => null,
+                'status' => $this->getStatus(),
+            ];
+        }
+        return [
+            'order_id' => $order->id,
+            'is_public' => true,
+            'vimeo_id' => $this->getVimeoId(),
+            'hash' => $this->getHash(),
+            'thumb' => $this->getImageUrlBase(),
+            'link_play' => $this->getPlayLink(),
+            'status' => $this->getStatus(),
+        ];
     }
 }

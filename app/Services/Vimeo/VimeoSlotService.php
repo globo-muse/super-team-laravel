@@ -25,6 +25,13 @@ class VimeoSlotService
     }
 
 
+    public function getInformations(int $vimeoId)
+    {
+        // $vimeoOptions = self::getOptionInsertVideo($fileSize, "{$nameVideo} #{$orderId}");
+        return new VimeoResponse($this->vimeo->request($vimeoId));
+    }
+
+
 
     static public function getOptionInsertVideo($fileSize, $nameVideoTo)
     {
