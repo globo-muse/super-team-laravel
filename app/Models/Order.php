@@ -21,4 +21,9 @@ class Order extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function video()
+    {
+        return $this->hasOne(Video::class);
+    }
 }
