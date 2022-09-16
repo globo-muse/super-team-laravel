@@ -134,8 +134,7 @@ class OrderApiController extends Controller
      */
     public function videoFileSended(StoreUpdateVimeoSlotRequest $request, $id)
     {
-        $order = $request->order;//$this->orderService->getOrderById($id);
-        // $user = $request->user();
+        $order = $request->order;
 
         $video = $order->video;
         if(!$video) {
@@ -144,10 +143,8 @@ class OrderApiController extends Controller
 
         $order->status = 'sended';
         $order->save();
-        $video->status = 'sended';
+        $video->status = Video::STATUS_NO;
         $video->save();
-
-        VimeoProcessingStatusJob::dispatch($order);
 
         return response(['message' => 'video sended'], 200);
     }

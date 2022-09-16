@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\OrderCompleteJob;
 use App\Models\Order;
 use App\Models\Video;
 use App\Services\Vimeo\VimeoSlotService;
@@ -19,21 +20,40 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->call(function(){
-            // $video = DB::table('videos')->where('status', 'sended')->first();
-            $video = Video::query()->where('status', 'sended')->first();
+            $video = Video::query()->where('status', Video::STATUS_NO)->first();
+            if(!$video) {
+                info('NO VIDEOS');
+                return;
+            }
             $vimeoService = new VimeoSlotService();
             $vimeoResponse = $vimeoService->getInformations($video->vimeo_id);
             info("CronJob Start: #{$video->id} | {$video->vimeo_id} | {$vimeoResponse->getStatus()}");
             if($vimeoResponse->getStatus() === 'available') {
-                $video->update(['status' => 'logoable']);
-                // $video->status = 'logoable';
-                // $video->save();
-                // $order = DB::table('orders')->find($video->order_id);
-                // $order->update(['status' => 'completed']);
+                $video->update(['status' => Video::STATUS_WAITING]);
             }
 
+        })->everyMinute();
+
+        $schedule->call(function(){
+            $video = Video::query()->where('status', Video::STATUS_SENDED)->first();
+            if(!$video) {
+                info('NO VIDEOS - SENDED');
+                return;
+            }
+            $vimeoService = new VimeoSlotService();
+            $vimeoResponse = $vimeoService->getInformations($video->vimeo_id);
+            info("SENDED CronJob Start: #{$video->id} | {$video->vimeo_id} | {$vimeoResponse->getStatus()}");
+            if($vimeoResponse->getStatus() === 'available') {
+                $video->update(['status' => Video::STATUS_COMPLETED]);
+                $order = Order::query()->find($video->order_id);
+                if(!$order) {
+                    info('Problema Order não encontrada quando foi pra concluir o pedido');
+                }
+                info("Set Order #{$order->id} as completed");
+                $order->update(['status' => 'completed']);
+                OrderCompleteJob::dispatch($order);
+            }
         })->everyMinute();
     }
 

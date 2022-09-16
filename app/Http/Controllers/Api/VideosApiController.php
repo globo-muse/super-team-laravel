@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VideoLogoApiResource;
 use App\Services\VideoService;
+use Exception;
 use Illuminate\Http\Request;
 
 class VideosApiController extends Controller
@@ -28,7 +29,11 @@ class VideosApiController extends Controller
         if(!$video = $this->service->getVideoById($id)) {
             return response()->json(['message' => 'video not founded'], 404);
         }
-        $video->update(['status' => $request->video_logo_status]);
-        return response()->json(['messsage' => 'edited with success'], 200);
+        try {
+            $video->update(['status' => $request->status]);
+            return response()->json(['messsage' => 'edited with success'], 200);
+        } catch(Exception $e) {
+            return response()->json(['messsage' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 }

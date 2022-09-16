@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\VideoStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->string('hash');
             $table->tinyText('thumb')->nullable();
             $table->tinyText('link_play')->nullable();
-            $table->string('status')->default('processing');
+            $table->enum('status', ['NO', 'WAITING', 'SENDED', 'COMPLETED'])->default('NO');
 
             $table->foreign('order_id', 'video_order_order_id')->references('id')->on('orders');
             $table->unique('vimeo_id', 'video_vimeo_id_unique');
