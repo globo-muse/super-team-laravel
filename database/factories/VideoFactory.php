@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Order;
+use App\Models\Video;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +27,7 @@ class VideoFactory extends Factory
             'hash' => $vimeoHash,
             'thumb' => '',
             'link_play' => '',
-            'status' => 'open',
+            'status' => Video::STATUS_NO,
         ];
     }
 }

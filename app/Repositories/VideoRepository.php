@@ -16,7 +16,7 @@ class VideoRepository implements VideoRepositoryInterface
 
     public function getAllLogoPending()
     {
-        return $this->entity->where('status', 'logoable')->get();
+        return $this->entity->where('status', Video::STATUS_WAITING)->get();
     }
 
     public function updateVideoStatus(Video $video, string $newStatus)

@@ -3,6 +3,7 @@
 namespace App\Services\Vimeo;
 
 use App\Models\Order;
+use App\Models\Video;
 use Exception;
 
 // use Polen\Includes\Vimeo\Polen_Vimeo_String_Url;
@@ -337,7 +338,7 @@ class VimeoResponse
                 'hash' => $this->getHash(),
                 'thumb' => null,
                 'link_play' => null,
-                'status' => $this->getStatus(),
+                'status' => Video::STATUS_SENDED,
             ];
         }
         return [
@@ -347,7 +348,7 @@ class VimeoResponse
             'hash' => $this->getHash(),
             'thumb' => $this->getImageUrlBase(),
             'link_play' => $this->getPlayLink(),
-            'status' => $this->getStatus(),
+            'status' => Video::STATUS_COMPLETED,
         ];
     }
 }

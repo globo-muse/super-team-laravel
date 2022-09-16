@@ -45,11 +45,11 @@ class VideoServiceTest extends TestCase
     public function test_video_service_return_with_status_logoable()
     {
         Video::factory()->count(3)->create(
-            ['status' => 'open']
+            ['status' => Video::STATUS_NO]
         );
 
         Video::factory()->count(5)->create(
-            ['status' => 'logoable']
+            ['status' => Video::STATUS_WAITING]
         );
 
         // $videoService = 
@@ -62,9 +62,9 @@ class VideoServiceTest extends TestCase
     public function test_video_service_set_status()
     {
         $video = Video::factory()->create(
-            ['status' => 'logoable']
+            ['status' => Video::STATUS_WAITING]
         );
-        $status = 'logo-sended';
+        $status = Video::STATUS_SENDED;
         $this->videoService->setVideoStatus($video, $status);
         
         $videoNewStatus = Video::query()->find($video->id);
