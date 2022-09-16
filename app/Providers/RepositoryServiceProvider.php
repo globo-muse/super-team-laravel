@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\{
     OrderRepositoryInterface,
+    VideoRepositoryInterface,
 };
 use App\Repositories\{
     OrderRepository,
+    VideoRepository,
 };
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             OrderRepositoryInterface::class,
             OrderRepository::class
+        );
+
+        $this->app->bind(
+            VideoRepositoryInterface::class, 
+            VideoRepository::class,
         );
     }
 

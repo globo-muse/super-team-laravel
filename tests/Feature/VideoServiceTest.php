@@ -8,9 +8,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
+
 class VideoServiceTest extends TestCase
 {
     use RefreshDatabase;
+
+    public VideoService $videoService;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+        $this->videoService = App(VideoService::class);
+    }
 
     /**
      * 
@@ -23,6 +33,15 @@ class VideoServiceTest extends TestCase
         $this->assertModelExists($video);
     }
 
+
+    public function test_video_service_get_video_by_id()
+    {
+        $video = Video::factory()->create();
+        $videoFromService = $this->videoService->getVideoById($video->id);
+        $this->assertEquals($video->id, $videoFromService->id);
+    }
+
+
     public function test_video_service_return_with_status_logoable()
     {
         Video::factory()->count(3)->create(
@@ -33,9 +52,22 @@ class VideoServiceTest extends TestCase
             ['status' => 'logoable']
         );
 
-        $videoService = App(VideoService::class);
-        $videosLogoable = $videoService->getVideoLogoable();
+        // $videoService = 
+        $videosLogoable = $this->videoService->getVideoLogoable();
 
         $this->assertCount(5, $videosLogoable);
+    }
+
+
+    public function test_video_service_set_status()
+    {
+        $video = Video::factory()->create(
+            ['status' => 'logoable']
+        );
+        $status = 'logo-sended';
+        $this->videoService->setVideoStatus($video, $status);
+        
+        $videoNewStatus = Video::query()->find($video->id);
+        $this->assertEquals($status, $videoNewStatus->status);
     }
 }
