@@ -18,4 +18,14 @@ class VideoRepository implements VideoRepositoryInterface
     {
         return $this->entity->where('status', 'logoable')->get();
     }
+
+    public function updateVideoStatus(Video $video, string $newStatus)
+    {
+        return $video->update(['status' => $newStatus]);
+    }
+
+    public function getVideoById($id)
+    {
+        return $this->entity->find($id);
+    }
 }

@@ -30,6 +30,7 @@ Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages
 Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api.departments.index');
 Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers'])->name('api.departments.users');
 Route::get('/videos/logo-waiting', [VideosApiController::class, 'getAllVideosLogoable'])->name('api.videos.logoable.list');
+Route::post('/videos/{id}/status', [VideosApiController::class, 'setVideoStatus'])->name('api.videos.logoable.set.status');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
@@ -41,11 +42,3 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/orders/{id}/file-sended', [OrderApiController::class, 'videoFileSended']);
     Route::put('/orders/{id}/deny', [OrderApiController::class, 'denyOrder']);
 });
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
-// Route::get('/orders/me', 'App\Http\Controllers\Api\OrderApiController@getByRespondeId');
-
-

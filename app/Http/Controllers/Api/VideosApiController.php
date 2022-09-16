@@ -22,4 +22,13 @@ class VideosApiController extends Controller
         $videos = $this->service->getVideoLogoable();
         return response(VideoLogoApiResource::collection($videos), 200);
     }
+
+    public function setVideoStatus(Request $request, $id)
+    {
+        if(!$video = $this->service->getVideoById($id)) {
+            return response()->json(['message' => 'video not founded'], 404);
+        }
+        $video->update(['status' => $request->video_logo_status]);
+        return response()->json(['messsage' => 'edited with success'], 200);
+    }
 }
