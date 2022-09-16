@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VideoLogoApiResource;
 use App\Services\VideoService;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,6 @@ class VideosApiController extends Controller
     public function getAllVideosLogoable()
     {
         $videos = $this->service->getVideoLogoable();
-        return response()->json($videos, 200);
+        return response(VideoLogoApiResource::collection($videos), 200);
     }
 }
