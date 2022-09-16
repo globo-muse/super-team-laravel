@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{StoreOrderRequest, StoreUpdateVimeoSlotRequest};
 use App\Http\Resources\OrderResource;
-use App\Jobs\{OrderCreatedResponderJob, OrderDeniedJob, VimeoProcessingStatusJob};
+use App\Jobs\{OrderCreatedJob, OrderCreatedResponderJob, OrderDeniedJob, VimeoProcessingStatusJob};
 use App\Models\{Order, Video};
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
@@ -31,7 +31,10 @@ class OrderApiController extends Controller
     {
         $user = $request->user();
         $perPage = (int) $request->per_page ?? 10;
-        $orders = $this->order->where('responder_id', $user->id)->paginate($perPage);
+        $orders = $this->order->
+            where('responder_id', $user->id)
+            ->whereIn('status', ['open', 'sended'])
+            ->paginate($perPage);
         return OrderResource::collection($orders);
     }
 
@@ -70,15 +73,10 @@ class OrderApiController extends Controller
             if(!$order) {
                 return response(['message' => 'error to create an order'], 400);
             }
-            
-            //TODO: remove hardcode
-            SendgridService::send(
-                'd-3ba931ea440e4c4b82c5c7a8ead37554',
-                $order->email,
-                $order->name,
-                OrderTemplateData::transform($order),
-            );
+
+            OrderCreatedJob::dispatch($order);
             OrderCreatedResponderJob::dispatch($order);
+            
             return response(new OrderResource($order), 201);
         } catch (Exception $e) {
             return response($e->getMessage(), $e->getCode());
