@@ -24,4 +24,13 @@ class DepartmentApiController extends Controller
         $users = $department->users;
         return DepartmentApiResource::collection($users);
     }
+
+    /**
+     * 
+     */
+    public function getAllWithUsers()
+    {
+        $dapartments = $this->repository->with('users')->get();
+        return DepartmentApiResource::collection($dapartments);
+    }
 }

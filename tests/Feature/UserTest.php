@@ -5,7 +5,11 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\assertCount;
 
 class UserTest extends TestCase
 {
@@ -32,6 +36,7 @@ class UserTest extends TestCase
         $this->assertDatabaseCount('users', $totalUsers);
     }
 
+
     public function  test_user_auth_endpoint()
     {
         $user = User::factory()->create([
@@ -46,4 +51,32 @@ class UserTest extends TestCase
         $response->assertJsonStructure(['token']);
 
     }
+
+
+    // public function test_forgot_password_generate_token()
+    // {
+    //     $user = User::factory()->create();
+    //     $dataJson = [
+    //         'email' => $user->email,
+    //     ];
+    //     $response = $this->postJson(route('password.email'), $dataJson);
+    //     $dataPasswordReset = DB::table('password_resets')->where('email', $user->email)->get();
+    //     // dd(strlen($dataPasswordReset[0]->token));
+    //     $this->assertCount(1, $dataPasswordReset);
+    //     $this->assertEquals(60, strlen($dataPasswordReset[0]->token));
+    //     $response->assertStatus(200);
+    // }
+
+
+    // public function test_forgot_password_check_reseted_password()
+    // {
+    //     $user = User::factory()->create();
+    //     $email = $user->email;
+    //     $token = $token = Str::random(64);
+    //     DB::table('password_resets')->insert([
+    //         'email' => $email, 
+    //         'token' => $token, 
+    //         'created_at' => Carbon::now()
+    //     ]);
+    // }
 }
