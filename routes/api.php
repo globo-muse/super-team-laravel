@@ -32,7 +32,7 @@ Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api
 Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers'])->name('api.departments.users');
 Route::get('/videos/logo-waiting', [VideosApiController::class, 'getAllVideosLogoable'])->name('api.videos.logoable.list');
 Route::post('/videos/{id}/status', [VideosApiController::class, 'setVideoStatus'])->name('api.videos.logoable.set.status');
-// Route::post('/forgot-password', [UserAuthController::class, 'forgetPassword'])->middleware('guest')->name('password.email');
+Route::post('/forgot-password', [UserAuthController::class, 'resetPassword'])->middleware('guest')->name('password.email');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');

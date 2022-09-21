@@ -81,6 +81,9 @@ class UserAuthController extends Controller
     public function resetPassword(Request $request)
     {
         // $token = $request['token'];
+        if(!$request->validate(['email' => 'required|email'])) {
+            return response(['caca'], 400);
+        }
         $email = $request['email'];
         
         // $password = $request['password'];
@@ -99,7 +102,7 @@ class UserAuthController extends Controller
         // $user->update(['password' => Hash::make($password)]);;
         // return response()->json(['message' => 'ok', 201]);
 
-        if(!$user = $this->repository->where('email', $email)) {
+        if(!$user = $this->repository->where('email', $email)->first()) {
             return response()->json(['message' => 'email sended (1)']);
         }
         
@@ -107,5 +110,6 @@ class UserAuthController extends Controller
         $user->update(['password' => Hash::make($newPassword)]);
 
         ForgotPasswordJob::dispatch($email, $newPassword);
+        return response()->json(['message' => 'email will sended with a new password']);
     }
 }
