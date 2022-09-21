@@ -27,10 +27,12 @@ Route::get('/collaborators', [CollaboratorControllers::class, 'index'])->name('a
 Route::get('/collaborators/{id}', [CollaboratorControllers::class, 'show'])->name('api.collaborators.show');
 Route::get('/pages', [PageApiController::class, 'index'])->name('api.pages.list');
 Route::get('/pages/{slug}', [PageApiController::class, 'show'])->name('api.pages.show');
+Route::get('/departments-users', [DepartmentApiController::class, 'getAllWithUsers'])->name('api.departments.users.index');
 Route::get('/departments', [DepartmentApiController::class, 'index'])->name('api.departments.index');
 Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers'])->name('api.departments.users');
 Route::get('/videos/logo-waiting', [VideosApiController::class, 'getAllVideosLogoable'])->name('api.videos.logoable.list');
 Route::post('/videos/{id}/status', [VideosApiController::class, 'setVideoStatus'])->name('api.videos.logoable.set.status');
+// Route::post('/forgot-password', [UserAuthController::class, 'forgetPassword'])->middleware('guest')->name('password.email');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
