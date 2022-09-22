@@ -32,7 +32,7 @@ class ForgotPasswordJob implements ShouldQueue
         //TODO: remove hardcode
         //TODO: Set a correct TemplateID
         SendgridService::send(
-            'd-2760a485df154b2a857cde3b91645594',
+            'd-2378daf4f4774aad9414cc9961aaf479',
             $this->email,
             '',
             [
