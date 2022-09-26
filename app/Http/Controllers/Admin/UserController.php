@@ -8,12 +8,16 @@ use App\Models\Department;
 use App\Models\User;
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\UserCreatedTemplateData;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+
+    // use CsvParse;
 
     public function __construct(
         private User $repository,
@@ -150,6 +154,48 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('message', 'Usuário removido com sucesso');
     }
 
+
+    public function storeUserBatch(Request $request)
+    {
+        if(!$request->hasFile('users-list')) {
+            return back()->with('error', 'need a .csv file');
+        }
+
+        $filePath = request()->file('users-list')->getPathname();
+
+        if (($open = fopen($filePath, "r")) !== FALSE) {
+            $success = [];
+            $fail = [];
+            while (($data = fgetcsv($open, 1000, ",")) !== FALSE) {
+                // $users[] = $data;
+                // dd($data);
+                $userLine = str_getcsv($data[0], ';');
+                $password = Str::random(6);
+                $dataUser = [
+                    'name' => $userLine[0],
+                    'department_id' => $userLine[1],
+                    'email' => $userLine[2],
+                    'password' => bcrypt($password),
+                ];
+                try {
+                    $newUser = $this->repository->create($dataUser);
+                    $success[] = $newUser;
+                } catch (Exception $e) {
+                    $fail[] = $userLine[2];
+                }
+            }
+            if(!empty($fail)) {
+                return back()->with('error', implode(', ', $fail));
+            }
+        }
+
+        return back()->with('success', implode(', ', $success));
+    }
+
+    
+    /**
+     * 
+     */
     private function departmentsToOption($departments)
     {
         $departmentsArray = [];

@@ -3,7 +3,15 @@
 @section('title', 'Usuários')
 
 @section('content_header')
-    <h1>Usuários <a href="{{ route('users.create') }}" class="btn btn-info"><i class="fas fa-plus"></i></a></h1>
+    <h1>Usuários 
+        <a href="{{ route('users.create') }}" class="btn btn-info"><i class="fas fa-plus"></i></a>
+        <form action="{{ route('users.create.batch') }}" class="form form-inline" method="post" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="users-list">
+            <button type="submit" class="btn btn-info">Enviar</button>
+        </form>
+
+    </h1>
 @stop
 
 @section('content')

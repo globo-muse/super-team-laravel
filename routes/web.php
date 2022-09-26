@@ -34,6 +34,7 @@ Route::prefix('admin')
 ->group(function() {
     Route::get('/', [AdminHomeController::class, 'index'])->name('admin.index');
     Route::resource('/users', UserController::class);
+    Route::post('/users/create-list', [UserController::class, 'storeUserBatch'])->name('users.create.batch');
     Route::resource('/pages-seo', PageSEOController::class);
     Route::resource('/departments', DepartmentController::class)->except('show');
 });
