@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function(){ return response(['works'], 200); })->name('api.home');
 
 Route::post('/auth', [UserAuthController::class, 'auth'])->name('user.auth');
 
@@ -33,7 +34,6 @@ Route::get('/departments/{id}/users', [DepartmentApiController::class, 'getUsers
 Route::get('/videos/logo-waiting', [VideosApiController::class, 'getAllVideosLogoable'])->name('api.videos.logoable.list');
 Route::post('/videos/{id}/status', [VideosApiController::class, 'setVideoStatus'])->name('api.videos.logoable.set.status');
 Route::post('/forgot-password', [UserAuthController::class, 'resetPassword'])->middleware('guest')->name('password.email');
-Route::get('/', function(){ return response(['works'], 200); })->name('api.home');
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
