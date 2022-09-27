@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\{
     HomeController As AdminHomeController
 };
 use App\Http\Controllers\HomeController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,6 +23,12 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
+    try{
+        $user = User::query()->find(10);
+        echo $user->name;
+    } catch (Exception $e) {
+        dd($e->getMessage());
+    }
     return view('welcome');
 });
 
