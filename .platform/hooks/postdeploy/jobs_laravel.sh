@@ -5,8 +5,10 @@
 
 # php artisan queue:restart
 
-sudo supervisorctl reread
+# sudo supervisorctl reread
  
-sudo supervisorctl update
+# sudo supervisorctl update
  
-sudo supervisorctl start laravel-worker:*
+# sudo supervisorctl start laravel-worker:*
+
+echo 'ok'
