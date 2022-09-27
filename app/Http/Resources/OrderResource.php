@@ -25,6 +25,7 @@ class OrderResource extends JsonResource
             'email' => $this->email,
             'occasion' => $this->occasion,
             'instructions' => $this->instructions,
+            'video_link' => $this->video_link ?? null,
             'date' => $this->created_at,
         ];
     }
