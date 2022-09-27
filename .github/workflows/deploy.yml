@@ -2,7 +2,7 @@ name: Laravel Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -21,8 +21,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: laravel-on-beanstalk
-          environment_name: lob-master
+          application_name: superteam
+          environment_name: superteam-main-2
           version_label: ${{ github.sha }}
-          region: ap-southeast-1
+          region: us-east-2
           deployment_package: deploy.zip
