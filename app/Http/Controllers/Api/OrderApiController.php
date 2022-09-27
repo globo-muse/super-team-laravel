@@ -10,6 +10,7 @@ use App\Models\{Order, Video};
 use App\Services\Email\Sendgrid\SendgridService;
 use App\Services\Email\Sendgrid\TemplateData\OrderTemplateData;
 use App\Services\OrderService;
+use App\Services\VideoService;
 use App\Services\Vimeo\{VimeoResponse, VimeoSlotService};
 use Exception;
 use Illuminate\Http\Request;
@@ -53,6 +54,18 @@ class OrderApiController extends Controller
     {
         if(!$order = $this->orderService->getOrderById($id)) {
             return response(['message' => 'order not founded'], 404);
+        }
+        if($order->status === 'completed') {
+            $vimeoApi = new VimeoSlotService();
+            $vimeoId = $order->video->vimeo_id ?? null;
+            if(!empty($vimeoId)) {
+                $vimeoResponse = $vimeoApi->getInformations($order->video->vimeo_id);
+                if(!$vimeoResponse->isError()) {
+                    if($vimeoResponse->getStatus() == 'available') {
+                        $order->video_link = $vimeoResponse->getPlayLink();
+                    }
+                }
+            }
         }
 
         return response()->json(new OrderResource($order));
