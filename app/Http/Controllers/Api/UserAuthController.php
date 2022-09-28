@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\UserUpdateApiRequest;
 use App\Http\Resources\UserApiResource;
 use App\Http\Resources\UserAuthApiResource;
 use App\Jobs\ForgotPasswordJob;
 use App\Models\User;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +20,10 @@ class UserAuthController extends Controller
 {
 
 
-    public function __construct(protected User $repository)
-    {}
+    public function __construct(
+        protected User $repository,
+        protected UserService $userService,
+    ) {}
 
 
     public function auth(Request $request)
@@ -45,6 +49,15 @@ class UserAuthController extends Controller
     {
         $user = $request->user();
         return response()->json(new UserApiResource($user));
+    }
+    
+
+    public function updateMe(UserUpdateApiRequest $request)
+    {
+        $user = $request->user();
+        $userData = $request->all();
+        $userData['image'] = $request->image;
+        $this->userService->updateUser($user->id, $userData);
     }
 
 

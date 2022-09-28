@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,42 @@ class UserTest extends TestCase
         $response->assertJsonStructure(['token']);
 
     }
+
+
+    public function test_user_service_get_user_by_id()
+    {
+        $email = 'emailtest@teste.com';
+        $user = User::factory()->create([
+            'email' => $email,
+        ]);
+        $userService = new UserService();
+        $userCaught = $userService->getUserByEmail($email);
+        $this->assertEquals($email, $userCaught->email);
+    }
+
+    // public function test_service_user_update_informations()
+    // {
+    //     $image = 'user/test/image.jpg';
+        
+    //     $name = 'Teste 001';
+    //     $email = 'emaildetest@test.com';
+
+    //     $user = User::factory()->create([
+    //         'image' => $image,
+    //     ]);
+
+    //     $userService = new UserService();
+    //     $userService->userUpdate([
+    //         'name' => $name,
+    //         'email' => $email,
+    //         'image' => fake()->image(storage_path('users')),
+    //     ]);
+
+    //     $userUpdated = $userService->getUserByEmail($email);
+
+    //     $this->assertEquals($email, $userUpdated->email);
+
+    // }
 
 
     // public function test_forgot_password_generate_token()
