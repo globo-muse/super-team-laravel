@@ -23,6 +23,7 @@ class OrderResource extends JsonResource
             'responder_id' => $this->responder_id,
             'name' => $this->name,
             'email' => $this->email,
+            'status' => $this->status,
             'occasion' => $this->occasion,
             'instructions' => $this->instructions,
             'video_link' => $this->video_link ?? null,
