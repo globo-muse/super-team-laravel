@@ -22,8 +22,8 @@ class DepartmentApiController extends Controller
     public function getUsers($id)
     {
         $department = $this->repository->find($id);
-        $users = $department->users;
-        return UserApiResource::collection($users);
+        // $users = $department->users;
+        return new DepartmentApiResource($department);
     }
 
     /**
