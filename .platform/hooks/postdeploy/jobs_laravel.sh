@@ -5,8 +5,8 @@
 
 # php artisan queue:restart
 
-echo 'SUPERVISOR RESTART RODOLFO NETO'
+echo 'RODOLFO NETO MAIS NADA'
 
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl start laravel-worker:*
+# sudo supervisorctl reread
+# sudo supervisorctl update
+# sudo supervisorctl start laravel-worker:*
