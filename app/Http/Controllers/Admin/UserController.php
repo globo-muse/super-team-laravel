@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
+use App\Jobs\UserCreatedJob;
 use App\Models\Department;
 use App\Models\User;
 use App\Services\Email\Sendgrid\SendgridService;
@@ -67,13 +68,7 @@ class UserController extends Controller
         try {
             $user = $this->repository->create($data);
 
-            //TODO: remove hard code
-            SendgridService::send(
-                'd-ab16489b51f84b6a861ca5b15e3b089b',
-                $user->email,
-                $user->name,
-                UserCreatedTemplateData::transform($user, $request->password),
-            );
+            UserCreatedJob::dispatch($user, $request->password);
             
             return redirect()->route('users.index')->with('message', 'cadastro efetuado com sucesso');
         } catch (QueryException $e) {
