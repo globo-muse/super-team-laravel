@@ -11,4 +11,4 @@
  
 # sudo supervisorctl start laravel-worker:*
 
-echo 'ok RODOLFO NETO'
+echo 'ok RODOLFO NETO DE NOVO'
