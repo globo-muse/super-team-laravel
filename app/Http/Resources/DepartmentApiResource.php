@@ -15,10 +15,6 @@ class DepartmentApiResource extends JsonResource
     public function toArray($request)
     {
         $userData = UserApiResource::collection($this->users);
-        // if(count($userData)) {
-        //     dd($userData);
-        //     return;
-        // }
         return [
             'id' => $this->id,
             'name' => $this->name,
