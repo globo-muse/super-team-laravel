@@ -37,6 +37,7 @@ Route::post('/forgot-password', [UserAuthController::class, 'resetPassword'])->m
 
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/me', [UserAuthController::class, 'me'])->name('api.auth.me');
+    Route::post('/me', [UserAuthController::class, 'updateMe'])->name('api.update.me');
     Route::get('/orders/to-answer', [OrderApiController::class, 'index'])->name('api.orders.order.to.answer');
     Route::get('/orders', [OrderApiController::class, 'getByUserId'])->name('api.orders.my.orders');
     Route::post('/orders', [OrderApiController::class, 'store'])->name('api.orders.store');
