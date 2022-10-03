@@ -17,16 +17,27 @@ class UserService
         return $user;
     }
 
+    /**
+     * 
+     */
     public function getUserByEmail(string $email)
     {
         return $this->repository->getUserByEmail($email);
     }
-
+    
+    /**
+     * 
+     */
     public function updateUser($userId, $data)
     {
-        if ($data['image']->isValid() ?? false) {
+        if (isset($data['image']) && $data['image']->isValid() ?? false) {
             $data['image'] = $data['image']->store("users");
         }
-        return $this->repository->find($userId)->update($data);
+        $user = $this->repository->find($userId);
+        if(!empty($data['password'])) {
+            $user->update(['password' => bcrypt($data['password'])]);
+            unset($data['password']);
+        }
+        return $user->update($data);
     }
 }

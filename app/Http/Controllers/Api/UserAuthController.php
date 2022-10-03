@@ -52,12 +52,13 @@ class UserAuthController extends Controller
     }
     
 
-    public function updateMe(UserUpdateApiRequest $request)
+    public function updateMe(Request $request)
     {
         $user = $request->user();
         $userData = $request->all();
         $userData['image'] = $request->image;
         $this->userService->updateUser($user->id, $userData);
+        return response()->json(['message' => 'success'], 200);
     }
 
 
